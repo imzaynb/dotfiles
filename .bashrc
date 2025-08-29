@@ -123,8 +123,9 @@ export NVM_DIR="$HOME/.nvm"
 export PATH="$PATH:/opt/nvim-linux64/bin:/home/zaynb/bin"
 alias config='/usr/bin/git --git-dir=/home/zaynb/.dotfiles/ --work-tree=/home/zaynb'
 
-
-
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
+
+# Podman
+export PODMAN_COMPOSE_PROVIDER="/usr/bin/podman-compose"

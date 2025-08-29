@@ -31,3 +31,12 @@ vim.api.nvim_create_autocmd("FileType", {
 		vim.opt_local.expandtab = false
 	end
 })
+
+vim.opt.rtp:prepend(os.getenv("HOME") .. "/.opam/default/share/ocp-indent/vim")
+
+vim.api.nvim_create_autocmd("BufWritePre", {
+  pattern = "*.ml,*.mli",
+  callback = function()
+    vim.cmd("%!ocp-indent")
+  end,
+})

@@ -129,3 +129,5 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 
 # Podman
 export PODMAN_COMPOSE_PROVIDER="/usr/bin/podman-compose"
+
+export PATH="$PATH:/opt/nvim-linux-x86_64/bin"

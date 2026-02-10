@@ -47,17 +47,83 @@ esac
 
 if [ -n "$force_color_prompt" ]; then
     if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-	# We have color support; assume it's compliant with Ecma-48
-	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-	# a case would tend to support setf rather than setaf.)
-	color_prompt=yes
+			# We have color support; assume it's compliant with Ecma-48
+			# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+			# a case would tend to support setf rather than setaf.)
+			color_prompt=yes
     else
-	color_prompt=
+			color_prompt=
     fi
 fi
 
+COLOR_START='\[\033['
+COLOR_END='m\]'
+		 COLOR_RESET="${COLOR_START}00${COLOR_END}"
+			COLOR_BOLD="${COLOR_START}01${COLOR_END}"
+	COLOR_FG_BLACK="${COLOR_START}30${COLOR_END}"
+		COLOR_FG_RED="${COLOR_START}31${COLOR_END}"
+	COLOR_FG_GREEN="${COLOR_START}32${COLOR_END}"
+ COLOR_FG_YELLOW="${COLOR_START}33${COLOR_END}"
+	 COLOR_FG_BLUE="${COLOR_START}34${COLOR_END}"
+COLOR_FG_MAGENTA="${COLOR_START}35${COLOR_END}"
+	 COLOR_FG_CYAN="${COLOR_START}36${COLOR_END}"
+	COLOR_FG_WHITE="${COLOR_START}37${COLOR_END}"
+	COLOR_BG_BLACK="${COLOR_START}40${COLOR_END}"
+		COLOR_BG_RED="${COLOR_START}41${COLOR_END}"
+	COLOR_BG_GREEN="${COLOR_START}42${COLOR_END}"
+ COLOR_BG_YELLOW="${COLOR_START}43${COLOR_END}"
+	 COLOR_BG_BLUE="${COLOR_START}44${COLOR_END}"
+COLOR_BG_MAGENTA="${COLOR_START}45${COLOR_END}"
+	 COLOR_BG_CYAN="${COLOR_START}46${COLOR_END}"
+	COLOR_BG_WHITE="${COLOR_START}47${COLOR_END}"
+
+function build_prompt {
+		
+		# Handle debian chroot stuff
+		PS1="${debian_chroot:+($debian_chroot)}"
+
+		# Print user
+		PS1+="${COLOR_BOLD}${COLOR_FG_RED}\u"
+		
+		# at
+		PS1+="${COLOR_RESET} at "
+
+		# Print host name
+		PS1+="${COLOR_BOLD}${COLOR_FG_BLUE}\h"
+	
+		# Print Git information.
+		# a couple pieces of git information inspired by https://github.com/bewuethr/dotfiles/blob/main/.myprompt.bash
+		GIT_DIR=$(git rev-parse --git-dir 2> /dev/null)
+		if [[ $GIT_DIR != "" ]]; then
+			GIT_BRANCH=$(git symbolic-ref -q --short HEAD)
+		  PS1+="${COLOR_RESET} δ ${COLOR_BOLD}${COLOR_FG_CYAN}$GIT_BRANCH"
+
+			local UNTRACKED_CHANGES=$(git status --porcelain | grep -c '^??')
+			if [[ $UNTRACKED_CHANGES -gt 0 ]]; then
+				PS1+=" ?$UNTRACKED_CHANGES"
+			fi
+			local UNSTAGED_CHANGES=$(git status --porcelain | grep -c '^.[MD]')
+			if [[ $UNSTAGED_CHANGES -gt 0 ]]; then
+				PS1+=" !$UNSTAGED_CHANGES"
+			fi
+			local STAGED_CHANGES=$(git status --porcelain | grep -c '^[MADRC]')
+			if [[ $STAGED_CHANGES -gt 0 ]]; then
+				PS1+=" +$STAGED_CHANGES"
+			fi
+		fi
+
+		# Print the current time and date.
+		PS1+="\n${COLOR_FG_GREEN}[\t $(date +"%m-%d-%Y")] "
+
+		# Print working directory
+		PS1+="${COLOR_FG_MAGENTA}\w"
+
+		# Print $
+		PS1+="${COLOR_RESET}\$ "
+}
+
 if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+		export PROMPT_COMMAND=build_prompt
 else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 fi
@@ -116,11 +182,14 @@ if ! shopt -oq posix; then
   fi
 fi
 
+# Node Version Manager
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-export PATH="$PATH:/opt/nvim-linux64/bin:/home/zaynb/bin"
+# export PATH="$PATH:/opt/nvim-linux64/bin:/home/zaynb/bin"
+export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
+
 alias config='/usr/bin/git --git-dir=/home/zaynb/.dotfiles/ --work-tree=/home/zaynb'
 
 # bun
@@ -130,4 +199,10 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 # Podman
 export PODMAN_COMPOSE_PROVIDER="/usr/bin/podman-compose"
 
-export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
+# Cargo
+. "$HOME/.cargo/env"
+
+# Elixir
+installs_dir=$HOME/.elixir-install/installs
+export PATH=$installs_dir/otp/28.1/bin:$PATH
+export PATH=$installs_dir/elixir/1.19.4-otp-28/bin:$PATH

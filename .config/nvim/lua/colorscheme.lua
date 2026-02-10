@@ -1,5 +1,5 @@
 vim.opt.termguicolors = true
-vim.cmd.colorscheme('kanagawa-dragon')
+vim.cmd.colorscheme('monokai-pro')
 vim.cmd [[
   highlight Normal guibg=none
   highlight NonText guibg=none

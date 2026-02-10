@@ -1,6 +1,12 @@
 vim.lsp.enable('clangd')
 vim.lsp.enable('ts_ls')
 vim.lsp.enable('tailwindcss')
+vim.lsp.enable('tinymist')
+vim.lsp.enable('pylsp')
+vim.lsp.config('elixirls', {
+    cmd = { "/home/zaynb/source/elixir/language_server.sh" };
+})
+vim.lsp.enable('elixirls')
 
 vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(args)

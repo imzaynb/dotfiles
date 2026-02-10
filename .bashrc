@@ -206,3 +206,5 @@ export PODMAN_COMPOSE_PROVIDER="/usr/bin/podman-compose"
 installs_dir=$HOME/.elixir-install/installs
 export PATH=$installs_dir/otp/28.1/bin:$PATH
 export PATH=$installs_dir/elixir/1.19.4-otp-28/bin:$PATH
+
+. "$HOME/.config/tmux/tmux-startup.sh"

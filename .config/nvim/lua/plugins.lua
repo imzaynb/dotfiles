@@ -36,8 +36,6 @@ lazy.setup({
   {'numToStr/Comment.nvim'},
 
   -- Color Schemes
-  {'Mofiqul/dracula.nvim'},
-  {'NTBBloodbath/doom-one.nvim'},
   {'rebelot/kanagawa.nvim'},
   {
     "ViViDboarder/wombat.nvim",
@@ -57,22 +55,5 @@ lazy.setup({
         filter = "pro", 
       })
     end,
-  },
-  -- Treesitter: A fancier way of parcing code, needed for some syntax highlighting.
-	{
-		"nvim-treesitter/nvim-treesitter",
-		branch = "main",
-		build = ":TSUpdate",
-		config = function()
-			local ts = require("nvim-treesitter")
-			ts.install({ "elixir", "eex", "heex", "lua" })
-
-			vim.api.nvim_create_autocmd("FileType", {
-				pattern = { "elixir", "eex", "heex" },
-				callback = function()
-					vim.treesitter.start()
-				end,
-			})
-		end,
   },
 })
